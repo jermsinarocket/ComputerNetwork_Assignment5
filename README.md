@@ -3,7 +3,7 @@
 Internet Traffic Analysis using Wireshark
 
 ## Development Environment
-* Wireshark
+* Wireshark 3.0.1
 
 ## Contributors
 * [Tan Wei Xuan](https://github.com/jermsinarocket)
