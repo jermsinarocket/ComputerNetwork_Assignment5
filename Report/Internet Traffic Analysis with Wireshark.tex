@@ -1,7 +1,8 @@
 \documentclass[a4paper,11pt]{article}
 \usepackage{setspace}
 \onehalfspacing
- 
+  
+\usepackage{caption}
 \usepackage{titlesec}
 \usepackage{graphicx}
 \usepackage{listings}
@@ -55,12 +56,12 @@
 \section{Capturing Packets using Wireshark}
 
 \section{Traffic Analysis using Wireshark}
-Analysis is done on the captured network traffic within the provided tracefile. Network period is captured for a period of \textbf{59.088} seconds.
+Analysis is done on the captured network traffic within the provided tracefile. Network Traffic is captured for a period of \textbf{59.088} seconds.
 
 \subsection{Total Number of Packets and Bytes}
 \begin{figure}[h!]
 	\includegraphics{TtlNoPacketsBytes}
-	\caption{\textit{Statistics $\rightarrow$ Capture File Properties}}
+	\caption{\textit{Capture Statistics (Statistics $\rightarrow$ Capture File Properties)}}
 \end{figure}
 The total number of packets being captured between a \textbf{59 second period} is \textbf{4137680}. The total number of Bytes between captured is \textbf{3120951509}. This information can be obtained thorugh \textit{Stastics $\rightarrow$ Capture File Properties}.
 
@@ -73,7 +74,7 @@ We know that the total number of packets being captured is \textbf{4137680}. As 
 \subsection{The number of packet and total bytes of TCP, UDP and ICMP traffic }
 \begin{figure}[h!]
 	\includegraphics[width = 16cm]{Traffic}
-	\caption{\textit{Statistics $\rightarrow$ Protocol Hierarchy}}
+	\caption{\textit{TCP,UDP and ICMP Proticol Hierarchy (Statistics $\rightarrow$ Protocol Hierarchy)}}
 \end{figure}
 The entirety of the network traffic is being transmitted through \textbf{IPv4} as it takes up \textbf{100\%} of the total packets.
 The total number of packet and total bytes of IPv4 TCP, UDP and Internel Control Message Protocol (ICMP) traffic are as follow:
@@ -91,14 +92,97 @@ The total number of packet and total bytes of IPv4 TCP, UDP and Internel Control
 	The total number of packets being transmitted using ICMP is \textbf{31256} and  the total number of bytes being transmitted is \textbf{978571}. 	
 	ICMP takes up \textbf{0.8\%} of total network traffic.
 \end{enumerate}
-For this captured netwrok traffic, IPv4 TCP and UDP take the majority of the percent of total packets, with \textbf{UDP taking up most of the traffic \textit{(61\%)}}.
+For this captured netwrok traffic, IPv4 TCP and UDP take the majority of the percent of total packets, with \textbf{UDP taking up most of the traffic \textit{(61\%)}}. Most of the traffic is probably allocated for UDP services such as Media Streaming, VoIP, etc.
 This information can be obtained thorugh \textit{Statistics $\rightarrow$ Protocol Hierarchy}.
-
-
 
 \subsection{Total Number of Packets and Bytes of each end host}
 
 \subsection{The number of packet and total bytes of FTP, SSH, DNS,  and HTTP}
+In order to identify the total number of packets and bytes trasmitted using File Transfer Protocol (FTP), Secure Shell (SSH), Domain Name System (DNS) and Hypertext Transfer Protocol (HTTP), we have to know the reserved port numbres that are being allocated to these services. The ports allocated for each of these services are as shown in the diagram below:
+\begin{figure}[h!]
+\centering
+	\includegraphics[height = 10cm]{ports}
+	\caption{\textit{Well-Known Ports (https://networking.ringofsaturn.com/Protocols/wellknownports.php)}}
+\end{figure}
+
+\begin{enumerate}
+	\item \textbf{FTP}
+	\newline
+	The port numbers that are being reserved for FTP is \textbf{20} and \textbf{21}. FTP uses two TCP connections for communication. Port 20 to pass control information and Port 21 to send the data files between the client and the server. The connection has to be established before the files can actually be sent across. As FTP is a TCP connection and thus in order to analyze only the traffic on ports 21 and 22, we apply a display filter to the entire captured traffic \textit{(tcp.port $== 20 || $ tcp.port $== 21$)}\newline
+	\begin{minipage}{3in}
+	\centering
+		\includegraphics[width = 16cm]{ftpfilter}
+		\captionsetup{justification=centering}
+		\captionof{figure}{\textit{Filter By FTP Port Numbers}}
+	\end{minipage}
+	\newline\newline
+	\begin{minipage}{5in}
+	\centering
+		\includegraphics[width = 16cm]{ftppacketsnbytes}
+		\captionsetup{justification=centering}
+		\captionof{figure}{\textit{FTP Capture Statistics (Stastics $\rightarrow$ Capture File Properties)}}
+	\end{minipage}
+\newline\newline
+	From the capture statistics, we can tell that the total number of packets being captured for FTP is \textbf{127} and the total number of Bytes being captured is \textbf{7946}. FTP takes up close to \textbf{0\%} of the entire network traffic.  From Figure 4, we can tell that there are two Source Destination, \textbf{121.180.215 and 195.2.240.180} and two destination addresses, \textbf{141.223.49.78 and 141.223.30.53}.This sequence of captured traffic is probably the exchange of files (63.568kb) between POSTECH webpages and a client's computer as the IP prefix for POSTECH is \textit{141.223.xx.xx}.
+	\item \textbf{SSH}
+	\newline
+	The port number that is being reserved for SSH is \textbf{22}. As SSH is a TCP connection and thus in order to analyze only the traffic on port 22, we apply a display filter to the 		entire captured traffic \textit{(tcp.port $== 22$)}\newline
+	\begin{minipage}{3in}
+	\centering
+		\includegraphics[width = 16cm]{sshfilter}
+		\captionsetup{justification=centering}
+		\captionof{figure}{\textit{Filter By SSH Port Numbers}}
+	\end{minipage}
+	\newline\newline
+	\begin{minipage}{5in}
+	\centering
+		\includegraphics[width = 16cm]{sshpacketsnbytes}
+		\captionsetup{justification=centering}
+		\captionof{figure}{\textit{SSH Capture Statistics (Statistics $\rightarrow$ Capture File Properties)}}
+	\end{minipage}
+	\newline\newline
+	From the capture statistics, we can tell that the total number of packets being captured for SSH is \textbf{799} and the total number of Bytes being captured is \textbf{132704}. SSH takes up close to \textbf{0\%} of the entire network traffic. SSH is typically used to log into a remote machine and execute commands and can be used to transfer files using the associated SSH file transfer (SFTP) or secure copy (SCP) protocols. SSH uses the client-server model.\newline\newline
+\begin{minipage}{5in}
+	\centering
+		\includegraphics[width = 16cm]{pshack}
+		\captionsetup{justification=centering}
+		\captionof{figure}{\textit{SSH Traffic Info}}
+	\end{minipage}
+	\newline\newline
+From Figure 8, the [ACK] indicates that a host is acknowledging having received some data, and the [PSH,ACK] indicates the host is acknowledging receipt of some previous data and also transmitting some more data. This sequence of captured data is thus probably the transfers of files between a Postech Server (Identifiable by IP Address Prefix) and a Client's Computer.
+	\item \textbf{DNS}
+	\newline
+ 	 A DNS server listens for requests on port \textbf{53 (both UDP and TCP)}. In order to analyze both TCP and UDP traffic on port 53, we apply a display filter to the entire captured traffic \textit{(tcp.port $== 53$ $||$ udp.port $== 53$)}\newline
+	\begin{minipage}{3in}
+	\centering
+		\includegraphics[width = 16cm]{dnsfilter}
+		\captionsetup{justification=centering}
+		\captionof{figure}{\textit{Filter By DNS Port Numbers}}
+	\end{minipage}
+	\newline\newline
+	\begin{minipage}{5in}
+	\centering
+		\includegraphics[width = 16cm]{dnspacketsnbytes}
+		\captionsetup{justification=centering}
+		\captionof{figure}{\textit{DNS Capture Statistics (Statistics $\rightarrow$ Capture File Properties)}}
+	\end{minipage}
+	\newline\newline
+From the capture statistics, we can tell that the total number of packets being captured for DNS is \textbf{31076} and the total number of Bytes being captured is \textbf{3850567}. DNS takes up about \textbf{0.8\%} of the entire network traffic.\newline
+\begin{minipage}{5in}
+	\centering
+		\includegraphics[width = 16cm]{udpdns}
+		\captionsetup{justification=centering}
+		\captionof{figure}{\textit{DNS (UDP) Capture Statistics}}
+		\includegraphics[width = 16cm]{tcpdns}
+		\captionsetup{justification=centering}
+		\captionof{figure}{\textit{DNS (TCP) Capture Statistics}}
+	\end{minipage}
+	\newline\newline
+DNS realizes UDP as its main transport layer protocol as it is much faster than TCP, which requires a 3 way handshake. TCP is generally used for transmitted large amount of information ($>$ 512 bytes). Comparing Figure 11 and 12, this is true for the captured network traffic as \textbf{more UDP packets (27129)} are being sent over the network as compared to TCP packets (3947).
+	\item \textbf{HTTP}
+	\newline
+	The port number that is being reserved for HTTP is \textbf{80}.
+\end{enumerate}
 \subsection{Select  two  applications  other  than  the  aforementioned  applications,  and  print  out  the  number  of packets and the bytes of the traffic which allocates well-known  port  number  (TCP/UDP 1 - 1024) }
 \subsection{Enumerate the average packet size, average packet inter-arrival time }
 
