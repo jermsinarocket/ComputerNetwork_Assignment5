@@ -181,10 +181,41 @@ From the capture statistics, we can tell that the total number of packets being 
 DNS realizes UDP as its main transport layer protocol as it is much faster than TCP, which requires a 3 way handshake. TCP is generally used for transmitted large amount of information ($>$ 512 bytes). Comparing Figure 11 and 12, this is true for the captured network traffic as \textbf{more UDP packets (27129)} are being sent over the network as compared to TCP packets (3947).
 	\item \textbf{HTTP}
 	\newline
-	The port number that is being reserved for HTTP is \textbf{80}.
+	The port number that is being reserved for HTTP is \textbf{80}.As HTML is a TCP connection and thus in order to analyze only the traffic on port 80, we apply a display filter to the 		entire captured traffic \textit{(tcp.port $== 80$)}\newline
+	\begin{minipage}{3in}
+	\centering
+		\includegraphics[width = 16cm]{httpfilter}
+		\captionsetup{justification=centering}
+		\captionof{figure}{\textit{Filter By HTTP Port Numbers}}
+	\end{minipage}
+	\newline\newline
+	\begin{minipage}{5in}
+	\centering
+		\includegraphics[width = 16cm]{httppacketsnbytes}
+		\captionsetup{justification=centering}
+		\captionof{figure}{\textit{HTTP Capture Statistics (Statistics $\rightarrow$ Capture File Properties)}}
+	\end{minipage}
+	\newline\newline
+	HTTP is used by the World Wide Web and it defines how messages are formatted and transmitted by browser. As such, we expect HTTP requests to take up a rather significant portion of the captured traffic. From the capture statistics, we can tell that the total number of packets being captured for HTTP is \textbf{280541} and the total number of Bytes being captured is \textbf{181146248}. HHTP takes up close to \textbf{8\%} of the entire network traffic. From Figure 13, we can tell that most of the HTTP traffic are actually between POSTECH's webpages (Identifiable by the IP prefix) and a client's computer. \newline
 \end{enumerate}
 \subsection{Select  two  applications  other  than  the  aforementioned  applications,  and  print  out  the  number  of packets and the bytes of the traffic which allocates well-known  port  number  (TCP/UDP 1 - 1024) }
 \subsection{Enumerate the average packet size, average packet inter-arrival time }
-
+\begin{enumerate}
+	\item \textbf{Average Packet Size}
+	\newline\newline
+	\begin{minipage}{5in}
+	\centering
+		\includegraphics[width = 16cm]{avgpacketsize}
+		\captionsetup{justification=centering}
+		\captionof{figure}{\textit{Average Packet Size (Statistics $\rightarrow$ Packet Lengths)}}
+	\end{minipage}
+	\newline\newline
+	There were \textbf{4108237 packets} comprising roughly \textbf{3120.95MB} of traffic throughout the capture period. The \textbf{average packet size} for the these packets is \textbf{759.03 bytes}. Majority of the packets are between 1280 - 2559 bytes, and we can tell that higher the amount of byte being trasferred, the higher the transfer rate\textit{(ms)} will be.
+	\newline\newline
+	\item \textbf{Average Packet Inter-arrival Time}
+	\newline
+	The total number of packets being transmitted using ICMP is \textbf{31256} and  the total number of bytes being transmitted is \textbf{978571}. 	
+	ICMP takes up \textbf{0.8\%} of total network traffic.
+\end{enumerate}
 
 \end{document}
